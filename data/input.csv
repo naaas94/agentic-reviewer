@@ -1,0 +1,11 @@
+id,text,pred_label,confidence
+sample_001,Delete my data permanently,Access Request,0.85
+sample_002,What information do you have about me?,Access Request,0.92
+sample_003,I want to be removed from your system,Erasure,0.78
+sample_004,How do you protect my data?,General Inquiry,0.65
+sample_005,"My email address has changed, please update it",Rectification,0.88
+sample_006,I don't want you to use my data for marketing,Objection,0.91
+sample_007,Send me a copy of my data,Access Request,0.94
+sample_008,I want to export my data to another service,Portability,0.87
+sample_009,This is a formal complaint about data protection,Complaint,0.89
+sample_010,Please erase all my personal information,Erasure,0.96

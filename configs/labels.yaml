@@ -1,0 +1,56 @@
+labels:
+  - name: "Access Request"
+    definition: "User asks to view data held about them under GDPR/CCPA rights."
+    examples:
+      - "What information do you have about me?"
+      - "Send me a copy of my data."
+      - "I want to see what data you have stored about me."
+      - "Can you provide me with my personal information?"
+
+  - name: "Erasure"
+    definition: "User demands deletion of their data under GDPR/CCPA right to be forgotten."
+    examples:
+      - "Delete my data permanently."
+      - "I want to be removed from your system."
+      - "Please erase all my personal information."
+      - "I want my data deleted under GDPR."
+
+  - name: "Rectification"
+    definition: "User requests correction or update of their personal data."
+    examples:
+      - "My email address has changed, please update it."
+      - "The information you have about me is incorrect."
+      - "Please correct my personal details."
+      - "Update my address in your records."
+
+  - name: "Portability"
+    definition: "User requests their data in a portable format for transfer to another service."
+    examples:
+      - "I want to export my data to another service."
+      - "Give me my data in a machine-readable format."
+      - "I want to transfer my data to a competitor."
+      - "Export all my personal information."
+
+  - name: "Objection"
+    definition: "User objects to processing of their data for specific purposes."
+    examples:
+      - "I don't want you to use my data for marketing."
+      - "Stop processing my data for profiling."
+      - "I object to automated decision making about me."
+      - "Don't use my data for research purposes."
+
+  - name: "Complaint"
+    definition: "User files a formal complaint about data processing practices."
+    examples:
+      - "I want to file a complaint about how you handle my data."
+      - "This is a formal complaint about data protection."
+      - "I'm reporting a data protection violation."
+      - "I want to escalate this to the data protection authority."
+
+  - name: "General Inquiry"
+    definition: "User asks general questions about data processing or privacy policies."
+    examples:
+      - "How do you protect my data?"
+      - "What is your privacy policy?"
+      - "How long do you keep my information?"
+      - "What data do you collect about me?" 

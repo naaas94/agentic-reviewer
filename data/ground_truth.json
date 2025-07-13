@@ -1,0 +1,149 @@
+{
+  "ground_truth_samples": [
+    {
+      "text_hash": "a1b2c3d4e5f6g7h8",
+      "text": "Delete my data permanently",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Incorrect",
+      "expected_reasoning": "The text clearly requests data deletion, not access to data",
+      "expected_suggested_label": "Erasure",
+      "confidence": 0.85
+    },
+    {
+      "text_hash": "b2c3d4e5f6g7h8i9",
+      "text": "Show me all the information you have about me",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text explicitly requests access to personal information",
+      "expected_suggested_label": null,
+      "confidence": 0.92
+    },
+    {
+      "text_hash": "c3d4e5f6g7h8i9j0",
+      "text": "I want to see my personal data",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text requests to view personal data, which matches the access request definition",
+      "expected_suggested_label": null,
+      "confidence": 0.78
+    },
+    {
+      "text_hash": "d4e5f6g7h8i9j0k1",
+      "text": "Remove all my data from your systems",
+      "predicted_label": "Erasure",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text requests removal of data, which matches the erasure definition",
+      "expected_suggested_label": null,
+      "confidence": 0.89
+    },
+    {
+      "text_hash": "e5f6g7h8i9j0k1l2",
+      "text": "What data do you have about me?",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text asks about what data is held, which is an access request",
+      "expected_suggested_label": null,
+      "confidence": 0.76
+    },
+    {
+      "text_hash": "f6g7h8i9j0k1l2m3",
+      "text": "Please delete my account and all associated data",
+      "predicted_label": "Erasure",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text requests account and data deletion, which matches erasure",
+      "expected_suggested_label": null,
+      "confidence": 0.91
+    },
+    {
+      "text_hash": "g7h8i9j0k1l2m3n4",
+      "text": "I need to access my personal information",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text explicitly states need to access personal information",
+      "expected_suggested_label": null,
+      "confidence": 0.83
+    },
+    {
+      "text_hash": "h8i9j0k1l2m3n4o5",
+      "text": "Can you tell me what you know about me?",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text asks for information about the user, which is an access request",
+      "expected_suggested_label": null,
+      "confidence": 0.67
+    },
+    {
+      "text_hash": "i9j0k1l2m3n4o5p6",
+      "text": "I want to erase all my data from your database",
+      "predicted_label": "Erasure",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text explicitly requests data erasure from database",
+      "expected_suggested_label": null,
+      "confidence": 0.94
+    },
+    {
+      "text_hash": "j0k1l2m3n4o5p6q7",
+      "text": "Give me access to my personal records",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Correct",
+      "expected_reasoning": "The text requests access to personal records",
+      "expected_suggested_label": null,
+      "confidence": 0.88
+    },
+    {
+      "text_hash": "k1l2m3n4o5p6q7r8",
+      "text": "I want to see my data",
+      "predicted_label": "Erasure",
+      "expected_verdict": "Incorrect",
+      "expected_reasoning": "The text requests to see data, not delete it",
+      "expected_suggested_label": "Access Request",
+      "confidence": 0.72
+    },
+    {
+      "text_hash": "l2m3n4o5p6q7r8s9",
+      "text": "Delete my information",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Incorrect",
+      "expected_reasoning": "The text requests deletion, not access",
+      "expected_suggested_label": "Erasure",
+      "confidence": 0.81
+    },
+    {
+      "text_hash": "m3n4o5p6q7r8s9t0",
+      "text": "What information do you have stored about me?",
+      "predicted_label": "Erasure",
+      "expected_verdict": "Incorrect",
+      "expected_reasoning": "The text asks about stored information, which is an access request",
+      "expected_suggested_label": "Access Request",
+      "confidence": 0.65
+    },
+    {
+      "text_hash": "n4o5p6q7r8s9t0u1",
+      "text": "Remove my data from your system",
+      "predicted_label": "Access Request",
+      "expected_verdict": "Incorrect",
+      "expected_reasoning": "The text requests data removal, not access",
+      "expected_suggested_label": "Erasure",
+      "confidence": 0.79
+    },
+    {
+      "text_hash": "o5p6q7r8s9t0u1v2",
+      "text": "I need to see what you have on me",
+      "predicted_label": "Erasure",
+      "expected_verdict": "Incorrect",
+      "expected_reasoning": "The text requests to see information, not delete it",
+      "expected_suggested_label": "Access Request",
+      "confidence": 0.68
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "created_at": "2024-01-15T10:00:00Z",
+    "total_samples": 15,
+    "correct_samples": 10,
+    "incorrect_samples": 5,
+    "accuracy": 0.67,
+    "labels": ["Access Request", "Erasure"],
+    "description": "Ground truth dataset for validating agentic-reviewer system accuracy"
+  }
+} 
