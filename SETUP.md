@@ -1,15 +1,18 @@
-# Agentic-Reviewer Setup Guide
+# Agentic Reviewer Setup Guide
 
-This guide will help you set up and run the agentic-reviewer system for semantic auditing of text classifications.
+This guide provides comprehensive setup instructions for the Agentic Reviewer system, designed for semantic auditing of text classification predictions. The system addresses the critical need for explainable, auditable classification systems through specialized LLM agents.
+
+---
 
 ## Prerequisites
 
-### 1. Python Environment
+### Python Environment
 - Python 3.10 or higher
 - pip package manager
 
-### 2. Local LLM Setup (Ollama)
-The system uses Ollama to run local LLMs. You have several options:
+### Local LLM Setup
+
+The system requires a local LLM service for inference. Several options are supported:
 
 #### Option A: Ollama (Recommended)
 1. Install Ollama from [https://ollama.ai](https://ollama.ai)
@@ -33,28 +36,32 @@ The system uses Ollama to run local LLMs. You have several options:
 #### Option C: Other Local LLM Servers
 The system can work with any local LLM server that provides an Ollama-compatible API.
 
+---
+
 ## Installation
 
-### 1. Clone the Repository
+### Repository Setup
 ```bash
 git clone <repository-url>
 cd agentic-reviewer
 ```
 
-### 2. Install Dependencies
+### Dependency Installation
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Verify Installation
+### Verification
 ```bash
 # Run the demo to verify everything works
 python demo.py
 ```
 
+---
+
 ## Quick Start
 
-### 1. Basic Review Run
+### Basic Review Execution
 ```bash
 # Review samples with low confidence (< 0.7)
 python run.py --strategy low_confidence --threshold 0.7
@@ -66,7 +73,7 @@ python run.py --strategy random --sample-size 5
 python run.py --strategy all
 ```
 
-### 2. API Server
+### API Server
 ```bash
 # Start the FastAPI server
 python main.py
@@ -75,7 +82,7 @@ python main.py
 # Visit http://localhost:8000/docs for interactive documentation
 ```
 
-### 3. Test API Endpoint
+### API Testing
 ```bash
 curl -X POST "http://localhost:8000/review" \
      -H "Content-Type: application/json" \
@@ -86,9 +93,12 @@ curl -X POST "http://localhost:8000/review" \
      }'
 ```
 
+---
+
 ## Configuration
 
-### 1. Label Definitions
+### Label Definitions
+
 Edit `configs/labels.yaml` to define your label ontology:
 
 ```yaml
@@ -100,7 +110,8 @@ labels:
       - "Example text 2"
 ```
 
-### 2. Model Configuration
+### Model Configuration
+
 The system supports different models. Change the model in your scripts:
 
 ```python
@@ -108,16 +119,19 @@ The system supports different models. Change the model in your scripts:
 review_loop = ReviewLoop(model_name="zephyr")  # or "llama3", "mistral"
 ```
 
-### 3. Sample Data
+### Sample Data
+
 Place your classification data in `data/input.csv` with columns:
 - `text`: Input text
 - `pred_label`: Predicted label
 - `confidence`: Confidence score (0.0 to 1.0)
 - `id`: Optional sample ID
 
+---
+
 ## Usage Examples
 
-### 1. Review Specific Samples
+### Review Specific Samples
 ```python
 from core.review_loop import ReviewLoop
 
@@ -130,7 +144,7 @@ result = review_loop.review_single_sample(
 print(result)
 ```
 
-### 2. Custom Sample Selection
+### Custom Sample Selection
 ```python
 from core.sample_selector import SampleSelector
 import pandas as pd
@@ -140,7 +154,7 @@ selector = SampleSelector("low_confidence", threshold=0.6)
 selected = selector.select_samples(df, max_samples=10)
 ```
 
-### 3. Access Review Results
+### Access Review Results
 ```python
 from core.logger import AuditLogger
 
@@ -150,9 +164,11 @@ print(f"Total reviews: {stats['total_reviews']}")
 print(f"Verdict distribution: {stats['verdict_distribution']}")
 ```
 
+---
+
 ## Troubleshooting
 
-### 1. Ollama Connection Issues
+### Ollama Connection Issues
 ```bash
 # Check if Ollama is running
 curl http://localhost:11434/api/tags
@@ -161,7 +177,7 @@ curl http://localhost:11434/api/tags
 ollama serve
 ```
 
-### 2. Model Not Found
+### Model Not Found
 ```bash
 # List available models
 ollama list
@@ -170,7 +186,7 @@ ollama list
 ollama pull mistral
 ```
 
-### 3. Python Import Errors
+### Python Import Errors
 ```bash
 # Make sure you're in the correct directory
 cd agentic-reviewer
@@ -179,28 +195,33 @@ cd agentic-reviewer
 pip install -r requirements.txt
 ```
 
-### 4. Database Issues
+### Database Issues
 ```bash
 # Remove existing database to start fresh
 rm outputs/reviewed_predictions.sqlite
 ```
 
+---
+
 ## Advanced Configuration
 
-### 1. Custom Prompts
+### Custom Prompts
+
 Edit the prompt templates in the `prompts/` directory:
 - `evaluator_prompt.txt`: For evaluating predictions
 - `proposer_prompt.txt`: For suggesting alternatives
 - `reasoner_prompt.txt`: For generating explanations
 
-### 2. Database Configuration
+### Database Configuration
+
 The system uses SQLite by default. You can modify the database path:
 
 ```python
 logger = AuditLogger("path/to/your/database.sqlite")
 ```
 
-### 3. LLM Parameters
+### LLM Parameters
+
 Adjust LLM parameters in `agents/base_agent.py`:
 
 ```python
@@ -211,14 +232,17 @@ Adjust LLM parameters in `agents/base_agent.py`:
 "num_predict": 512  # Adjust based on your needs
 ```
 
-## Performance Tips
+---
 
-### 1. Model Selection
+## Performance Optimization
+
+### Model Selection
 - **Mistral**: Good balance of speed and quality
 - **Zephyr**: Faster, good for high-throughput scenarios
 - **Llama3**: Higher quality, slower inference
 
-### 2. Batch Processing
+### Batch Processing
+
 For large datasets, process in batches:
 
 ```python
@@ -228,12 +252,15 @@ for chunk in pd.read_csv("data/large_dataset.csv", chunksize=100):
     pass
 ```
 
-### 3. Caching
+### Caching
+
 The system automatically caches prompt hashes for versioning. Consider implementing additional caching for repeated queries.
+
+---
 
 ## Monitoring and Logging
 
-### 1. Review Statistics
+### Review Statistics
 ```python
 from core.logger import AuditLogger
 
@@ -242,7 +269,7 @@ stats = logger.get_review_stats()
 print(stats)
 ```
 
-### 2. Individual Reviews
+### Individual Reviews
 ```python
 # Get a specific review
 review = logger.get_review("sample_001")
@@ -253,30 +280,35 @@ incorrect_reviews = logger.get_reviews_by_verdict("Incorrect")
 print(f"Found {len(incorrect_reviews)} incorrect predictions")
 ```
 
-### 3. Run Metadata
+### Run Metadata
+
 Each review run is logged with metadata including:
 - Model used
 - Prompt versions
 - Selection strategy
 - Performance metrics
 
+---
+
 ## Contributing
 
-### 1. Adding New Agents
+### Adding New Agents
 1. Create a new agent class in `agents/`
 2. Inherit from `BaseAgent`
 3. Implement the required methods
 4. Add tests in `tests/`
 
-### 2. Adding New Selection Strategies
+### Adding New Selection Strategies
 1. Add strategy logic to `SampleSelector`
 2. Update the `select_samples` method
 3. Add tests for the new strategy
 
-### 3. Customizing Prompts
+### Customizing Prompts
 1. Edit prompt templates in `prompts/`
 2. Test with different examples
 3. Update version numbers in metadata
+
+---
 
 ## Support
 
@@ -285,6 +317,8 @@ For issues and questions:
 2. Review the demo script (`python demo.py`)
 3. Check the API documentation (`http://localhost:8000/docs`)
 4. Examine the test files for usage examples
+
+---
 
 ## License
 

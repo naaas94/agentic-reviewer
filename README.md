@@ -1,48 +1,50 @@
-# 🤖 Agentic Reviewer
+# Agentic Reviewer
 
 **Semantic Auditing for Text Classification Predictions**
 
 A production-ready system that uses LLM agents to audit and improve text classification predictions through semantic evaluation, alternative suggestions, and natural language explanations.
 
-```bash
-# 🚧 Work under construction 🚧
-# This system is being actively developed and improved
-# Security features and ground truth validation in progress
-```
+**Status:** Active development with security features and ground truth validation in progress.
 
-## 🚀 Key Features
+---
 
-### ✨ **Multi-Task Unified Agent**
-- **Single LLM Call**: Process evaluation, proposal, and reasoning in one efficient call
-- **3x Faster**: Reduced latency and token usage compared to individual agents
-- **Better Consistency**: Coordinated decision-making across all tasks
+## System Overview
 
-### 🔒 **Enterprise Security**
-- **Input Sanitization**: Protection against injection attacks
-- **API Key Authentication**: Secure access control
-- **Rate Limiting**: Prevent abuse and ensure fair usage
-- **CORS Protection**: Configurable cross-origin policies
-- **SSL/TLS Support**: HTTPS encryption for production
+The Agentic Reviewer addresses the critical need for explainable, auditable text classification systems. Rather than treating classification as a black-box prediction, this system decomposes the reasoning process into specialized agents that provide transparent, reference-backed analysis of classification decisions.
 
-### ⚡ **High Performance**
-- **Advanced Caching**: LRU cache with persistence and memory limits
-- **Circuit Breaker**: Automatic failure detection and recovery
-- **Concurrent Processing**: Async batch processing with configurable limits
-- **Memory Management**: Automatic cache eviction and cleanup
+### Core Architecture
 
-### 📊 **Production Monitoring**
-- **Health Checks**: Comprehensive system status monitoring
-- **Metrics Dashboard**: Real-time performance and usage statistics
-- **Audit Logging**: Complete audit trail for compliance
-- **Cache Analytics**: Memory usage and hit rate monitoring
+The system implements a unified agent approach that processes evaluation, proposal, and reasoning in a single coordinated call, reducing latency while maintaining consistency across all tasks. This design prioritizes explainability, auditability, and regulatory compliance.
 
-### 🛠️ **Developer Experience**
-- **Type Safety**: Full type hints and validation
-- **Comprehensive Tests**: 90%+ test coverage
-- **Docker Support**: Containerized deployment
-- **Auto-Deployment**: One-command production setup
+### Key Capabilities
 
-## 🏗️ Architecture
+**Multi-Task Unified Agent**
+- Single LLM call processing for evaluation, proposal, and reasoning
+- 3x reduction in latency and token usage compared to individual agents
+- Coordinated decision-making across all tasks with consistent reasoning
+
+**Enterprise Security**
+- Input sanitization against injection attacks
+- API key authentication with secure access control
+- Rate limiting to prevent abuse and ensure fair usage
+- CORS protection with configurable cross-origin policies
+- SSL/TLS support for production HTTPS encryption
+
+**High Performance**
+- Advanced LRU caching with persistence and memory limits
+- Circuit breaker pattern for automatic failure detection and recovery
+- Concurrent processing with configurable batch limits
+- Memory management with automatic cache eviction and cleanup
+
+**Production Monitoring**
+- Comprehensive health checks for system status monitoring
+- Real-time performance and usage statistics dashboard
+- Complete audit trail for compliance and debugging
+- Cache analytics for memory usage and hit rate monitoring
+
+---
+
+## Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -65,15 +67,19 @@ A production-ready system that uses LLM agents to audit and improve text classif
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🚀 Quick Start
+---
+
+## Quick Start
 
 ### Prerequisites
 - Python 3.11+
 - Ollama with Mistral model
 - 4GB+ RAM recommended
 
-### 1. Clone and Setup
+### Installation
+
 ```bash
+# Clone repository
 git clone https://github.com/your-org/agentic-reviewer.git
 cd agentic-reviewer
 
@@ -85,7 +91,8 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Start Ollama
+### LLM Setup
+
 ```bash
 # Install Ollama (if not already installed)
 curl -fsSL https://ollama.ai/install.sh | sh
@@ -97,7 +104,8 @@ ollama pull mistral
 ollama serve
 ```
 
-### 3. Run the System
+### System Execution
+
 ```bash
 # Development mode
 python main.py
@@ -106,7 +114,8 @@ python main.py
 python deploy.py --mode dev
 ```
 
-### 4. Test the API
+### API Testing
+
 ```bash
 # Health check
 curl http://localhost:8000/health
@@ -121,9 +130,12 @@ curl -X POST http://localhost:8000/review \
   }'
 ```
 
-## 🔧 Configuration
+---
+
+## Configuration
 
 ### Environment Variables
+
 ```bash
 # LLM Configuration
 AR_MODEL_NAME=mistral
@@ -147,7 +159,8 @@ AR_CACHE_MAX_SIZE_MB=200
 AR_ENABLE_SANITIZATION=true
 ```
 
-### Configuration File
+### Configuration Management
+
 The system uses a hierarchical configuration system with validation:
 
 ```python
@@ -159,9 +172,12 @@ print(config.api.port)        # 8000
 print(config.performance.batch_size)  # 10
 ```
 
-## 🐳 Docker Deployment
+---
 
-### Quick Docker Setup
+## Deployment
+
+### Docker Deployment
+
 ```bash
 # Generate deployment files
 python deploy.py --mode docker --ssl
@@ -176,23 +192,8 @@ docker-compose up -d
 docker-compose ps
 ```
 
-### Custom Docker Build
-```bash
-# Build image
-docker build -t agentic-reviewer .
+### Production Deployment
 
-# Run container
-docker run -d \
-  --name agentic-reviewer \
-  -p 8000:8000 \
-  -e AR_API_KEY="your-key" \
-  -v $(pwd)/outputs:/app/outputs \
-  agentic-reviewer
-```
-
-## 🏭 Production Deployment
-
-### Automated Deployment
 ```bash
 # Production deployment with SSL
 python deploy.py --mode prod --ssl
@@ -204,6 +205,7 @@ python deploy.py --mode prod --ssl
 ```
 
 ### Manual Production Setup
+
 ```bash
 # 1. Install dependencies
 pip install -r requirements.txt
@@ -220,10 +222,14 @@ export AR_LOG_LEVEL=INFO
 python main.py
 ```
 
-## 📚 API Reference
+---
+
+## API Reference
 
 ### Authentication
+
 All API endpoints require Bearer token authentication:
+
 ```bash
 curl -H "Authorization: Bearer your-api-key" \
   http://localhost:8000/api/endpoint
@@ -232,7 +238,9 @@ curl -H "Authorization: Bearer your-api-key" \
 ### Endpoints
 
 #### `POST /review`
+
 Review a single prediction:
+
 ```json
 {
   "text": "Delete my data permanently",
@@ -243,6 +251,7 @@ Review a single prediction:
 ```
 
 Response:
+
 ```json
 {
   "sample_id": "api_1234567890",
@@ -261,7 +270,9 @@ Response:
 ```
 
 #### `GET /health`
+
 System health check:
+
 ```json
 {
   "status": "healthy",
@@ -283,7 +294,9 @@ System health check:
 ```
 
 #### `GET /metrics`
+
 System metrics:
+
 ```json
 {
   "system": {
@@ -305,7 +318,9 @@ System metrics:
 ```
 
 #### `GET /stats`
+
 Review statistics:
+
 ```json
 {
   "total_reviews": 1250,
@@ -324,9 +339,12 @@ Review statistics:
 }
 ```
 
-## 🧪 Testing
+---
 
-### Run All Tests
+## Testing
+
+### Test Execution
+
 ```bash
 # Run test suite
 python -m pytest tests/ -v
@@ -338,7 +356,8 @@ python -m pytest tests/ --cov=. --cov-report=html
 python -m pytest tests/test_agents.py -v
 ```
 
-### Test Individual Components
+### Component Testing
+
 ```bash
 # Test unified agent
 python -c "
@@ -354,9 +373,12 @@ curl -X POST http://localhost:8000/review \
   -d '{"text": "test", "predicted_label": "test", "confidence": 0.8}'
 ```
 
-## 📊 Monitoring and Logging
+---
+
+## Monitoring and Logging
 
 ### Health Monitoring
+
 ```bash
 # Check system health
 curl http://localhost:8000/health
@@ -369,11 +391,13 @@ curl http://localhost:8000/cache/stats
 ```
 
 ### Log Files
+
 - **Application logs**: `logs/app.log`
 - **Audit logs**: `outputs/audit.log`
 - **Error logs**: `logs/error.log`
 
 ### Cache Management
+
 ```bash
 # Clean up expired cache entries
 curl -X POST http://localhost:8000/cache/cleanup \
@@ -384,10 +408,14 @@ curl http://localhost:8000/cache/stats \
   -H "Authorization: Bearer your-api-key"
 ```
 
-## 🔧 Advanced Configuration
+---
+
+## Advanced Configuration
 
 ### Custom Labels
+
 Edit `configs/labels.yaml` to define your classification labels:
+
 ```yaml
 labels:
   - name: "Access Request"
@@ -404,12 +432,14 @@ labels:
 ```
 
 ### Custom Prompts
+
 Modify prompt templates in `prompts/`:
 - `evaluator_prompt.txt`: Evaluation logic
 - `proposer_prompt.txt`: Alternative suggestions
 - `reasoner_prompt.txt`: Explanations
 
 ### Performance Tuning
+
 ```python
 # Adjust cache settings
 config.performance.cache_max_size_mb = 500
@@ -424,9 +454,12 @@ config.llm.temperature = 0.05  # More deterministic
 config.llm.max_tokens = 1024   # Longer responses
 ```
 
-## 🤝 Contributing
+---
+
+## Contributing
 
 ### Development Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/your-org/agentic-reviewer.git
@@ -444,13 +477,15 @@ pip install -e .
 python -m pytest tests/ -v
 ```
 
-### Code Style
+### Code Standards
+
 - Follow PEP 8
 - Use type hints
 - Write docstrings
 - Add tests for new features
 
 ### Pull Request Process
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -458,24 +493,26 @@ python -m pytest tests/ -v
 5. Run the test suite
 6. Submit a pull request
 
-## 📄 License
+---
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+---
+
+## Acknowledgments
 
 - Built with [FastAPI](https://fastapi.tiangolo.com/)
 - LLM integration via [Ollama](https://ollama.ai/)
 - Inspired by research on semantic auditing and LLM agents
 
-## 📞 Support
+---
+
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/your-org/agentic-reviewer/issues)
 - **Documentation**: [Wiki](https://github.com/your-org/agentic-reviewer/wiki)
 - **Email**: support@your-org.com
-
----
-
-**Made with ❤️ for better AI systems**
 
  
