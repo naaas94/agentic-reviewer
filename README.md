@@ -4,7 +4,22 @@
 
 A production-ready system that uses LLM agents to audit and improve text classification predictions through semantic evaluation, alternative suggestions, and natural language explanations.
 
-**Status:** Active development with security features and ground truth validation in progress.
+**Status:** RAG enhancement in development.
+
+---
+
+## Strategic Direction: RAG Edition
+
+The Agentic Reviewer is evolving toward a **RAG Edition** that integrates Retrieval-Augmented Generation to enhance auditability, factual grounding, and explainability. This enhancement will enable the system to incorporate external knowledge (policy guidelines, historical decisions, annotated examples) into its reasoning pipeline.
+
+**Key Benefits:**
+- **Factual Grounding**: Vector-based retrieval of relevant policy documents
+- **Reduced Hallucinations**: External knowledge injection reduces LLM fabrication  
+- **Enhanced Explainability**: Citations and references to source documents
+- **Regulatory Compliance**: Direct integration with legal frameworks
+
+**Implementation Timeline:** 5-8 weeks for full RAG Edition
+**Current Status:** Foundation architecture ready for RAG integration
 
 ---
 
@@ -15,6 +30,8 @@ The Agentic Reviewer addresses the critical need for explainable, auditable text
 ### Core Architecture
 
 The system implements a unified agent approach that processes evaluation, proposal, and reasoning in a single coordinated call, reducing latency while maintaining consistency across all tasks. This design prioritizes explainability, auditability, and regulatory compliance.
+
+**RAG Enhancement:** The architecture is designed to support seamless integration of retrieval-augmented generation, with modular components that can be extended with vector database capabilities.
 
 ### Key Capabilities
 
@@ -42,6 +59,12 @@ The system implements a unified agent approach that processes evaluation, propos
 - Complete audit trail for compliance and debugging
 - Cache analytics for memory usage and hit rate monitoring
 
+**RAG-Ready Infrastructure**
+- Modular design supporting vector database integration
+- Extensible configuration system for retrieval parameters
+- Caching layer ready for embedding and document storage
+- Security framework supporting document content validation
+
 ---
 
 ## Architecture
@@ -65,6 +88,15 @@ The system implements a unified agent approach that processes evaluation, propos
 │   Selection     │    │ • TTL Support   │    │ • Logging       │
 │ • Validation    │    │ • Alerts        │    │ • Alerts        │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+
+                    ┌─────────────────┐
+                    │  RAG Layer      │  ← Future Enhancement
+                    │                 │
+                    │ • Vector Store  │
+                    │ • Embeddings    │
+                    │ • Retrieval     │
+                    │ • Document Mgmt │
+                    └─────────────────┘
 ```
 
 ---
@@ -75,6 +107,7 @@ The system implements a unified agent approach that processes evaluation, propos
 - Python 3.11+
 - Ollama with Mistral model
 - 4GB+ RAM recommended
+- (Future) Vector database (FAISS/Chroma) for RAG Edition
 
 ### Installation
 
@@ -112,7 +145,9 @@ python main.py
 
 # Or use the deployment script
 python deploy.py --mode dev
-```
+
+# Future: RAG Edition setup (when available)
+# python setup_rag.py --install-dependencies
 
 ### API Testing
 
@@ -128,6 +163,47 @@ curl -X POST http://localhost:8000/review \
     "predicted_label": "Access Request",
     "confidence": 0.85
   }'
+```
+
+---
+
+## RAG Edition Implementation Plan
+
+### Phase 1: Core RAG Infrastructure (Weeks 1-2)
+- [ ] Set up vector database infrastructure (FAISS/Chroma)
+- [ ] Implement embedding generation with BGE/MiniLM
+- [ ] Create document ingestion pipeline
+- [ ] Add RAG configuration to `core/config.py`
+
+### Phase 2: Integration Layer (Weeks 3-4)
+- [ ] Integrate retrieval with unified agent
+- [ ] Update prompt templates with context injection
+- [ ] Implement basic caching for embeddings
+- [ ] Add retrieval quality monitoring
+
+### Phase 3: Enhanced Features (Weeks 5-6)
+- [ ] Add reranking and hybrid search capabilities
+- [ ] Implement policy alignment validation
+- [ ] Add document security validation
+- [ ] Performance optimization
+
+### Phase 4: Production Readiness (Weeks 7-8)
+- [ ] Comprehensive testing and validation
+- [ ] Documentation updates
+- [ ] Deployment preparation
+- [ ] Performance monitoring
+
+### New Dependencies (Future)
+```txt
+# Vector Database and Embeddings
+faiss-cpu==1.7.4
+sentence-transformers==2.2.2
+chromadb==0.4.15
+
+# Document Processing
+langchain==0.0.350
+langchain-community==0.0.10
+tiktoken==0.5.1
 ```
 
 ---
@@ -157,6 +233,13 @@ AR_CACHE_MAX_SIZE_MB=200
 
 # Security Configuration
 AR_ENABLE_SANITIZATION=true
+
+# RAG Configuration (Future)
+AR_ENABLE_RAG=true
+AR_EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
+AR_VECTOR_STORE_TYPE=faiss
+AR_TOP_K_RETRIEVAL=5
+AR_SIMILARITY_THRESHOLD=0.7
 ```
 
 ### Configuration Management
@@ -452,6 +535,11 @@ config.performance.batch_size = 25
 # Adjust LLM settings
 config.llm.temperature = 0.05  # More deterministic
 config.llm.max_tokens = 1024   # Longer responses
+
+# Future: RAG settings (when available)
+# config.rag.enable_retrieval = True
+# config.rag.top_k_retrieval = 5
+# config.rag.similarity_threshold = 0.7
 ```
 
 ---
@@ -506,6 +594,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [FastAPI](https://fastapi.tiangolo.com/)
 - LLM integration via [Ollama](https://ollama.ai/)
 - Inspired by research on semantic auditing and LLM agents
+- RAG Edition inspired by retrieval-augmented generation research
 
 ---
 
@@ -514,5 +603,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Issues**: [GitHub Issues](https://github.com/your-org/agentic-reviewer/issues)
 - **Documentation**: [Wiki](https://github.com/your-org/agentic-reviewer/wiki)
 - **Email**: support@your-org.com
+- **RAG Edition**: See [Strategic Analysis](RAG_EDITION_STRATEGIC_ANALYSIS.md) for detailed implementation plan
 
  
