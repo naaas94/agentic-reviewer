@@ -2,7 +2,6 @@
 TECHNICAL_IMPLEMENTATION_GUIDE.md
 EVOLUTIONARY_ROADMAP_STRATEGIC_IMPLEMENTATION.md
 RAG_EDITION_STRATEGIC_ANALYSIS.md
-summary.md
 
 # Python
 __pycache__/
@@ -147,6 +146,7 @@ models/
 *.joblib
 *.faiss
 *.json
+!data/*.json
 logs/
 *.log
 
@@ -154,6 +154,7 @@ logs/
 *.sqlite
 *.sqlite3
 *.db
+!outputs/*.sqlite
 
 # API keys and secrets
 .env
@@ -205,6 +206,8 @@ ssl/
 
 # Large data files
 *.csv
+!data/*.csv
+!tests/*.csv
 *.tsv
 *.xlsx
 *.xls
