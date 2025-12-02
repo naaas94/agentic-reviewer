@@ -9,9 +9,9 @@
 
 ## Executive Summary
 
-The Agentic Reviewer represents a well-architected semantic auditing system for text classification predictions, designed with production-ready patterns and extensibility in mind. The system demonstrates sound engineering principles—modular agents, circuit breaker patterns, comprehensive security layers, and async processing. However, several architectural assumptions, implementation gaps, and misalignments between stated goals and current implementation require attention before this artifact can serve as a compelling portfolio PoC.
+The Agentic Reviewer represents a well-architected semantic auditing system for text classification predictions, designed with production-ready patterns and extensibility in mind. The system demonstrates sound engineering principles—modular agents, circuit breaker patterns, comprehensive security layers, and async processing. The documentation has been updated to transparently distinguish between implemented capabilities and planned roadmap items, presenting the project as an evolving development journey.
 
-**Overall Assessment:** The foundation is solid. The vector, intent, and architecture are aligned with industry best practices for LLM-based auditing systems. With targeted refinements, this system can transition from "aspirational documentation" to a **demonstrable, locally-executable PoC** that showcases practical AI engineering competence.
+**Overall Assessment:** The foundation is solid. The vector, intent, and architecture are aligned with industry best practices for LLM-based auditing systems. The core semantic auditing pipeline is functional today, with RAG enhancement clearly documented as the next development phase. This transparency strengthens the portfolio presentation by demonstrating both technical execution and honest project communication.
 
 ---
 
@@ -65,10 +65,12 @@ User Input → Security Validation → Unified Agent → LLM (Ollama/Mistral)
 | Stated Goal | Implementation Status | Gap Assessment |
 |-------------|----------------------|----------------|
 | Semantic auditing | ✅ Core flow implemented | Minor prompt tuning needed |
-| RAG integration | ❌ Infrastructure absent | Major gap—only documentation exists |
+| RAG integration | 🔲 Documented as roadmap | Planned enhancement, clearly labeled as "coming" |
 | Production-ready security | ⚠️ Partial | High false-positive rates on security validation |
 | Enterprise monitoring | ⚠️ Partial | Health checks exist, but metrics not integrated |
 | Explainability | ✅ Reasoning agent functional | Quality depends on LLM prompt engineering |
+
+**Note:** Documentation has been updated to transparently distinguish between implemented capabilities and planned roadmap items. This aligns the repository presentation with its actual development stage.
 
 ---
 
@@ -188,17 +190,19 @@ def detect_injection(self, text: str, domain_context: str = "gdpr") -> List[Secu
         # Skip validation for whitelisted patterns
 ```
 
-#### 4.1.2 RAG Infrastructure Completely Absent
+#### 4.1.2 RAG Infrastructure Not Yet Implemented
 
-**Problem:** The README and implementation plan describe elaborate RAG capabilities, but zero code exists. The system is documented as "RAG-ready" but has no:
-- Embedding service
-- Vector store integration
-- Document ingestion pipeline
-- Retrieval service
+**Status:** RAG capabilities are documented as part of the development roadmap, not as existing functionality. The README has been updated to clearly distinguish between what's implemented today and what's planned.
 
-**Impact:** Documentation-reality mismatch undermines portfolio credibility.
+**Current State:**
+- Embedding service → 🔲 Planned
+- Vector store integration → 🔲 Planned
+- Document ingestion pipeline → 🔲 Planned
+- Retrieval service → 🔲 Planned
 
-**Recommended Fix:** For PoC, implement minimal viable RAG:
+**Path Forward:** This is intentional staging. The core semantic auditing pipeline works today. RAG represents the next evolution, documented transparently as the development journey.
+
+**Recommended Next Step for PoC:** Implement minimal viable RAG:
 - Local FAISS index with 10-20 policy document chunks
 - `sentence-transformers` for embeddings (no API needed)
 - Simple top-k retrieval before LLM call
@@ -388,7 +392,7 @@ task_responses = response.split("=== TASK")  # Fragile
 #### Stage 4: Polish & Documentation (Priority: Medium)
 **Focus:** Portfolio-ready presentation.
 
-- [ ] Clean up documentation (remove aspirational claims)
+- [x] Clean up documentation (✓ Updated to distinguish implemented vs planned)
 - [ ] Add architecture diagrams (Mermaid/PlantUML)
 - [ ] Create video walkthrough
 - [ ] Write blog-style technical explanation
@@ -576,7 +580,7 @@ the erasure of personal data concerning them without undue delay...
 ### 9.4 Documentation Phase (Week 4)
 
 #### Update README.md
-- Remove aspirational claims not yet implemented
+- ✓ Documentation updated to distinguish implemented vs planned features
 - Add "Quick Start" with 5-minute demo
 - Include sample output screenshots
 - Document limitations honestly
@@ -614,7 +618,7 @@ Runs through representative examples with rich output.
 - [ ] (Optional) Simple RAG (`core/rag/simple_rag.py`)
 
 #### Documentation Artifacts
-- [ ] Updated `README.md`
+- [x] Updated `README.md` (✓ Completed — transparent about implemented vs planned)
 - [ ] `ARCHITECTURE.md` with diagrams
 - [ ] `DEMO_WALKTHROUGH.md` with screenshots
 - [ ] `LESSONS_LEARNED.md` for interview prep

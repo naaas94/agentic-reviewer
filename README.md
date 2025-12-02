@@ -2,72 +2,68 @@
 
 **Semantic Auditing for Text Classification Predictions**
 
-A production-ready system that uses LLM agents to audit and improve text classification predictions through semantic evaluation, alternative suggestions, and natural language explanations.
-
-**Status:** RAG enhancement in development.
+A local-first LLM system that audits text classification predictions through semantic evaluation, alternative suggestions, and natural language explanations. Built with production-oriented patterns and designed for iterative enhancement.
 
 ---
 
-## Strategic Direction: RAG Edition
+## Project Status & Roadmap
 
-The Agentic Reviewer is evolving toward a **RAG Edition** that integrates Retrieval-Augmented Generation to enhance auditability, factual grounding, and explainability. This enhancement will enable the system to incorporate external knowledge (policy guidelines, historical decisions, annotated examples) into its reasoning pipeline.
+> **Current Version:** v1.0 — Core Semantic Auditing  
+> **In Development:** RAG Edition (Retrieval-Augmented Generation)
 
-**Key Benefits:**
-- **Factual Grounding**: Vector-based retrieval of relevant policy documents
-- **Reduced Hallucinations**: External knowledge injection reduces LLM fabrication  
-- **Enhanced Explainability**: Citations and references to source documents
-- **Regulatory Compliance**: Direct integration with legal frameworks
+This project follows an incremental development philosophy. The table below provides transparency on what's implemented, what's in progress, and what's planned:
 
-**Implementation Timeline:** 5-8 weeks for full RAG Edition
-**Current Status:** Foundation architecture ready for RAG integration
+| Capability | Status | Notes |
+|------------|--------|-------|
+| Multi-Task Unified Agent | ✅ **Implemented** | Single LLM call for evaluation, proposal, and reasoning |
+| FastAPI REST Interface | ✅ **Implemented** | Full API with health checks, metrics, review endpoints |
+| Security Layer | ✅ **Implemented** | Prompt injection detection, input validation, rate limiting |
+| LRU Caching + Circuit Breaker | ✅ **Implemented** | Production resilience patterns |
+| Audit Logging (SQLite) | ✅ **Implemented** | Complete audit trail for compliance |
+| System Monitoring | ✅ **Implemented** | Health checks, memory management, performance metrics |
+| RAG: Vector Store | 🔲 **Planned** | FAISS/ChromaDB integration (next phase) |
+| RAG: Embeddings Service | 🔲 **Planned** | sentence-transformers integration |
+| RAG: Document Retrieval | 🔲 **Planned** | Policy document context injection |
+| Evaluation Framework | 🔲 **Planned** | Quantitative accuracy metrics |
+| CLI Interface | 🔲 **Planned** | Interactive terminal experience |
 
----
-
-## System Overview
-
-The Agentic Reviewer addresses the critical need for explainable, auditable text classification systems. Rather than treating classification as a black-box prediction, this system decomposes the reasoning process into specialized agents that provide transparent, reference-backed analysis of classification decisions.
-
-### Core Architecture
-
-The system implements a unified agent approach that processes evaluation, proposal, and reasoning in a single coordinated call, reducing latency while maintaining consistency across all tasks. This design prioritizes explainability, auditability, and regulatory compliance.
-
-**RAG Enhancement:** The architecture is designed to support seamless integration of retrieval-augmented generation, with modular components that can be extended with vector database capabilities.
-
-### Key Capabilities
-
-**Multi-Task Unified Agent**
-- Single LLM call processing for evaluation, proposal, and reasoning
-- 3x reduction in latency and token usage compared to individual agents
-- Coordinated decision-making across all tasks with consistent reasoning
-
-**Enterprise Security**
-- Input sanitization against injection attacks
-- API key authentication with secure access control
-- Rate limiting to prevent abuse and ensure fair usage
-- CORS protection with configurable cross-origin policies
-- SSL/TLS support for production HTTPS encryption
-
-**High Performance**
-- Advanced LRU caching with persistence and memory limits
-- Circuit breaker pattern for automatic failure detection and recovery
-- Concurrent processing with configurable batch limits
-- Memory management with automatic cache eviction and cleanup
-
-**Production Monitoring**
-- Comprehensive health checks for system status monitoring
-- Real-time performance and usage statistics dashboard
-- Complete audit trail for compliance and debugging
-- Cache analytics for memory usage and hit rate monitoring
-
-**RAG-Ready Infrastructure**
-- Modular design supporting vector database integration
-- Extensible configuration system for retrieval parameters
-- Caching layer ready for embedding and document storage
-- Security framework supporting document content validation
+**Why this approach?** Building AI systems requires iterative validation. The core semantic auditing pipeline is functional and demonstrable today. RAG enhancement represents the next evolution—documented extensively in the implementation plan, with infrastructure designed to support it.
 
 ---
 
-## Architecture
+## What's Working Today
+
+### Core Semantic Auditing Pipeline
+
+The system evaluates whether a predicted classification label semantically fits the input text, using a three-phase agent approach:
+
+```
+Input Text + Predicted Label + Confidence
+                ↓
+    ┌───────────────────────────┐
+    │     Unified Agent         │
+    │  ┌─────────────────────┐  │
+    │  │ 1. EVALUATE         │  │  → Correct / Incorrect / Uncertain
+    │  │ 2. PROPOSE          │  │  → Alternative label if incorrect
+    │  │ 3. REASON           │  │  → Natural language explanation
+    │  └─────────────────────┘  │
+    └───────────────────────────┘
+                ↓
+    Verdict + Reasoning + Explanation
+```
+
+### Domain: GDPR/CCPA Data Subject Requests
+
+The system is configured for privacy request classification:
+- **Access Request** — User asks to view their data
+- **Erasure** — User requests data deletion (right to be forgotten)
+- **Rectification** — User requests data correction
+- **Portability** — User requests data export
+- **Objection** — User objects to processing
+- **Complaint** — Formal complaint about data handling
+- **General Inquiry** — Questions about privacy policies
+
+### Production-Oriented Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -86,17 +82,8 @@ The system implements a unified agent approach that processes evaluation, propos
 │ • SQLite        │    │ • LRU Cache     │    │ • Health Checks │
 │ • Sample        │    │ • Persistence   │    │ • Memory Mgmt   │
 │   Selection     │    │ • TTL Support   │    │ • Logging       │
-│ • Validation    │    │ • Alerts        │    │ • Alerts        │
+│ • Validation    │    │                 │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-
-                    ┌─────────────────┐
-                    │  RAG Layer      │  ← Future Enhancement
-                    │                 │
-                    │ • Vector Store  │
-                    │ • Embeddings    │
-                    │ • Retrieval     │
-                    │ • Document Mgmt │
-                    └─────────────────┘
 ```
 
 ---
@@ -107,7 +94,6 @@ The system implements a unified agent approach that processes evaluation, propos
 - Python 3.11+
 - Ollama with Mistral model
 - 4GB+ RAM recommended
-- (Future) Vector database (FAISS/Chroma) for RAG Edition
 
 ### Installation
 
@@ -127,29 +113,38 @@ pip install -r requirements.txt
 ### LLM Setup
 
 ```bash
-# Install Ollama (if not already installed)
+# Install Ollama (see https://ollama.ai/download for your platform)
+# On Linux/macOS:
 curl -fsSL https://ollama.ai/install.sh | sh
 
 # Pull Mistral model
 ollama pull mistral
 
-# Start Ollama service
+# Start Ollama service (in a separate terminal)
 ollama serve
 ```
 
-### System Execution
+### Run the Demo
 
 ```bash
-# Development mode
+# Comprehensive system demonstration
+python demo.py
+```
+
+The demo script validates the entire pipeline without requiring external services (beyond Ollama), showing:
+- Data loading and sample selection
+- Agent initialization
+- Configuration status
+- Cache operations
+- (If Ollama running) Live LLM processing
+
+### Start the API Server
+
+```bash
 python main.py
+```
 
-# Or use the deployment script
-python deploy.py --mode dev
-
-# Future: RAG Edition setup (when available)
-# python setup_rag.py --install-dependencies
-
-### API Testing
+### Test an API Request
 
 ```bash
 # Health check
@@ -165,183 +160,14 @@ curl -X POST http://localhost:8000/review \
   }'
 ```
 
----
-
-## RAG Edition Implementation Plan
-
-### Phase 1: Core RAG Infrastructure (Weeks 1-2)
-- [ ] Set up vector database infrastructure (FAISS/Chroma)
-- [ ] Implement embedding generation with BGE/MiniLM
-- [ ] Create document ingestion pipeline
-- [ ] Add RAG configuration to `core/config.py`
-
-### Phase 2: Integration Layer (Weeks 3-4)
-- [ ] Integrate retrieval with unified agent
-- [ ] Update prompt templates with context injection
-- [ ] Implement basic caching for embeddings
-- [ ] Add retrieval quality monitoring
-
-### Phase 3: Enhanced Features (Weeks 5-6)
-- [ ] Add reranking and hybrid search capabilities
-- [ ] Implement policy alignment validation
-- [ ] Add document security validation
-- [ ] Performance optimization
-
-### Phase 4: Production Readiness (Weeks 7-8)
-- [ ] Comprehensive testing and validation
-- [ ] Documentation updates
-- [ ] Deployment preparation
-- [ ] Performance monitoring
-
-### New Dependencies (Future)
-```txt
-# Vector Database and Embeddings
-faiss-cpu==1.7.4
-sentence-transformers==2.2.2
-chromadb==0.4.15
-
-# Document Processing
-langchain==0.0.350
-langchain-community==0.0.10
-tiktoken==0.5.1
-```
-
----
-
-## Configuration
-
-### Environment Variables
-
-```bash
-# LLM Configuration
-AR_MODEL_NAME=mistral
-AR_OLLAMA_URL=http://localhost:11434
-AR_TEMPERATURE=0.1
-AR_MAX_TOKENS=512
-AR_TIMEOUT=30
-
-# API Configuration
-AR_API_HOST=0.0.0.0
-AR_API_PORT=8000
-AR_API_KEY=your-secure-api-key
-AR_RATE_LIMIT_MAX=1000
-
-# Performance Configuration
-AR_BATCH_SIZE=10
-AR_MAX_CONCURRENT=10
-AR_CACHE_MAX_SIZE_MB=200
-
-# Security Configuration
-AR_ENABLE_SANITIZATION=true
-
-# RAG Configuration (Future)
-AR_ENABLE_RAG=true
-AR_EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
-AR_VECTOR_STORE_TYPE=faiss
-AR_TOP_K_RETRIEVAL=5
-AR_SIMILARITY_THRESHOLD=0.7
-```
-
-### Configuration Management
-
-The system uses a hierarchical configuration system with validation:
-
-```python
-from core.config import config
-
-# Access configuration
-print(config.llm.model_name)  # mistral
-print(config.api.port)        # 8000
-print(config.performance.batch_size)  # 10
-```
-
----
-
-## Deployment
-
-### Docker Deployment
-
-```bash
-# Generate deployment files
-python deploy.py --mode docker --ssl
-
-# Set API key
-export AR_API_KEY="your-secure-api-key"
-
-# Start services
-docker-compose up -d
-
-# Check status
-docker-compose ps
-```
-
-### Production Deployment
-
-```bash
-# Production deployment with SSL
-python deploy.py --mode prod --ssl
-
-# Follow the printed instructions to:
-# 1. Update service file paths
-# 2. Install systemd service
-# 3. Start the service
-```
-
-### Manual Production Setup
-
-```bash
-# 1. Install dependencies
-pip install -r requirements.txt
-
-# 2. Generate SSL certificates
-openssl genrsa -out ssl/key.pem 2048
-openssl req -new -x509 -key ssl/key.pem -out ssl/cert.pem -days 365
-
-# 3. Set environment variables
-export AR_API_KEY="your-secure-api-key"
-export AR_LOG_LEVEL=INFO
-
-# 4. Start with SSL
-python main.py
-```
-
----
-
-## API Reference
-
-### Authentication
-
-All API endpoints require Bearer token authentication:
-
-```bash
-curl -H "Authorization: Bearer your-api-key" \
-  http://localhost:8000/api/endpoint
-```
-
-### Endpoints
-
-#### `POST /review`
-
-Review a single prediction:
-
-```json
-{
-  "text": "Delete my data permanently",
-  "predicted_label": "Access Request", 
-  "confidence": 0.85,
-  "use_unified_agent": true
-}
-```
-
-Response:
-
+**Expected Response:**
 ```json
 {
   "sample_id": "api_1234567890",
   "verdict": "Incorrect",
   "reasoning": "The text is about deletion, not access",
   "suggested_label": "Erasure",
-  "explanation": "This text clearly requests data deletion",
+  "explanation": "This text clearly requests data deletion under the right to be forgotten",
   "success": true,
   "metadata": {
     "model_name": "mistral",
@@ -352,84 +178,87 @@ Response:
 }
 ```
 
-#### `GET /health`
+---
 
-System health check:
+## API Reference
 
-```json
-{
-  "status": "healthy",
-  "timestamp": "2024-01-15T10:30:00Z",
-  "version": "1.0.0",
-  "uptime": 3600.5,
-  "system_health": {
-    "cpu_usage": 15.2,
-    "memory_usage": 45.8,
-    "disk_usage": 23.1
-  },
-  "cache_health": {
-    "status": "healthy",
-    "entries": 1250,
-    "memory_usage_mb": 45.2,
-    "utilization_percent": 45.2
-  }
-}
+### Endpoints (Implemented)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | System health check with cache and system metrics |
+| `GET` | `/metrics` | Detailed performance metrics |
+| `GET` | `/stats` | Review statistics and verdict distribution |
+| `POST` | `/review` | Review a single prediction |
+| `GET` | `/reviews/{verdict}` | Get reviews filtered by verdict |
+| `GET` | `/cache/stats` | Cache performance statistics |
+| `POST` | `/cache/cleanup` | Clean expired cache entries |
+| `GET` | `/security/stats` | Security validation statistics |
+| `GET` | `/security/drift` | Drift detection results |
+
+### Authentication
+
+When `AR_API_KEY` is set, endpoints require Bearer token:
+
+```bash
+curl -H "Authorization: Bearer your-api-key" http://localhost:8000/stats
 ```
 
-#### `GET /metrics`
+---
 
-System metrics:
+## Configuration
 
-```json
-{
-  "system": {
-    "cpu_usage": 15.2,
-    "memory_usage": 45.8,
-    "disk_usage": 23.1
-  },
-  "application": {
-    "total_requests": 1250,
-    "avg_response_time": 245.6,
-    "error_rate": 0.02
-  },
-  "cache": {
-    "entries": 1250,
-    "hit_rate": 0.85,
-    "memory_usage_mb": 45.2
-  }
-}
+### Environment Variables
+
+```bash
+# LLM Configuration
+AR_MODEL_NAME=mistral           # Ollama model name
+AR_OLLAMA_URL=http://localhost:11434
+AR_TEMPERATURE=0.1              # Low for deterministic responses
+AR_MAX_TOKENS=512
+AR_TIMEOUT=30
+
+# API Configuration
+AR_API_HOST=0.0.0.0
+AR_API_PORT=8000
+AR_API_KEY=your-secure-api-key  # Optional, enables auth
+AR_RATE_LIMIT_MAX=100
+
+# Performance Configuration
+AR_BATCH_SIZE=10
+AR_MAX_CONCURRENT=5
+AR_CACHE_MAX_SIZE_MB=100
+
+# Security Configuration
+AR_ENABLE_SANITIZATION=true
 ```
 
-#### `GET /stats`
+### Custom Labels
 
-Review statistics:
+Edit `configs/labels.yaml` to adapt to your classification domain:
 
-```json
-{
-  "total_reviews": 1250,
-  "verdict_distribution": {
-    "Correct": 850,
-    "Incorrect": 320,
-    "Uncertain": 80
-  },
-  "avg_confidence": 0.72,
-  "recent_reviews_24h": 45,
-  "cache_stats": {
-    "entries": 1250,
-    "hit_rate": 0.85,
-    "memory_usage_mb": 45.2
-  }
-}
+```yaml
+labels:
+  - name: "Access Request"
+    definition: "User asks to view data held about them under GDPR/CCPA rights."
+    examples:
+      - "What information do you have about me?"
+      - "Send me a copy of my data."
 ```
+
+### Custom Prompts
+
+Modify prompt templates in `prompts/` to adjust agent behavior:
+- `evaluator_prompt.txt` — Verdict generation logic
+- `proposer_prompt.txt` — Alternative label suggestion
+- `reasoner_prompt.txt` — Explanation generation
 
 ---
 
 ## Testing
 
-### Test Execution
-
 ```bash
-# Run test suite
+# Run full test suite
 python -m pytest tests/ -v
 
 # Run with coverage
@@ -439,170 +268,156 @@ python -m pytest tests/ --cov=. --cov-report=html
 python -m pytest tests/test_agents.py -v
 ```
 
-### Component Testing
+---
+
+## What's Coming: RAG Edition
+
+The next evolution integrates **Retrieval-Augmented Generation** to enhance reasoning with external knowledge. This is actively planned, with detailed implementation specifications in:
+
+- [`RAG_IMPLEMENTATION_PLAN.md`](RAG_IMPLEMENTATION_PLAN.md) — Comprehensive 18-24 week implementation roadmap
+- [`RAG_ARCHITECTURE_EVOLUTION.md`](RAG_ARCHITECTURE_EVOLUTION.md) — Technical architecture decisions
+- [`TECHNICAL_REVIEW_POC_ROADMAP.md`](TECHNICAL_REVIEW_POC_ROADMAP.md) — PoC staging and focus points
+
+### RAG Edition Benefits (Planned)
+
+| Enhancement | Impact |
+|-------------|--------|
+| **Policy Document Retrieval** | Ground reasoning in actual GDPR/CCPA text |
+| **Reduced Hallucinations** | External knowledge constrains LLM responses |
+| **Citation Support** | Reference specific document sections |
+| **Audit Trail Enhancement** | Record which documents informed decisions |
+
+### Planned RAG Stack
 
 ```bash
-# Test unified agent
-python -c "
-from agents.unified_agent import UnifiedAgent
-agent = UnifiedAgent()
-result = agent.process_sample_sync('Test text', 'Test label', 0.8)
-print(result)
-"
+# Future dependencies (not yet required)
+faiss-cpu==1.7.4              # Vector database
+sentence-transformers==2.2.2  # Local embeddings
+```
 
-# Test API endpoint
-curl -X POST http://localhost:8000/review \
-  -H "Content-Type: application/json" \
-  -d '{"text": "test", "predicted_label": "test", "confidence": 0.8}'
+### Why RAG Isn't Implemented Yet
+
+Building production RAG requires careful foundation work:
+
+1. **Evaluation First** — Need baseline metrics before measuring RAG improvements
+2. **Infrastructure Stability** — Core pipeline must be rock-solid
+3. **Ablation Testing** — Each RAG component validated independently
+4. **No Vendor Lock-in** — Local-first approach (FAISS, not cloud vector DBs)
+
+The implementation plan documents this disciplined approach. RAG will be added when the foundation is ready—not before.
+
+---
+
+## Project Structure
+
+```
+agentic-reviewer/
+├── agents/
+│   ├── base_agent.py          # LLM abstraction with caching, circuit breaker
+│   ├── unified_agent.py       # Multi-task processor (single LLM call)
+│   ├── evaluator.py           # Verdict generation
+│   ├── proposer.py            # Alternative label suggestion
+│   └── reasoner.py            # Explanation generation
+├── core/
+│   ├── config.py              # Hierarchical configuration with validation
+│   ├── cache.py               # LRU cache with TTL and persistence
+│   ├── security.py            # Prompt injection & adversarial detection
+│   ├── monitoring.py          # Health checks and metrics
+│   ├── review_loop.py         # Batch and single-sample orchestration
+│   ├── data_loader.py         # CSV data ingestion
+│   ├── sample_selector.py     # Low-confidence, random, all strategies
+│   └── logger.py              # SQLite audit logging
+├── configs/
+│   └── labels.yaml            # Classification label definitions
+├── prompts/
+│   ├── evaluator_prompt.txt   # Jinja2 template for evaluation
+│   ├── proposer_prompt.txt    # Jinja2 template for proposals
+│   └── reasoner_prompt.txt    # Jinja2 template for reasoning
+├── data/
+│   └── input.csv              # Sample predictions for testing
+├── tests/
+│   ├── test_agents.py         # Agent unit tests
+│   └── test_security.py       # Security validation tests
+├── demo.py                    # Self-contained demonstration script
+├── main.py                    # FastAPI server
+└── requirements.txt           # Python dependencies
 ```
 
 ---
 
-## Monitoring and Logging
+## Design Principles
 
-### Health Monitoring
+### Local-First
+No cloud dependencies for core functionality. Ollama runs locally, SQLite stores data locally, caching is in-memory. This enables:
+- **Privacy** — Data never leaves your machine
+- **Cost Control** — No API usage fees
+- **Reliability** — No network dependency for inference
 
-```bash
-# Check system health
-curl http://localhost:8000/health
+### Production Patterns, PoC Scale
+The architecture implements enterprise patterns (circuit breakers, caching, security layers) at a scale appropriate for demonstration and iteration. This showcases engineering maturity without over-engineering.
 
-# Get detailed metrics
-curl http://localhost:8000/metrics
+### Explainability by Design
+Every classification audit produces:
+1. **Verdict** — Binary/ternary correctness assessment
+2. **Reasoning** — Technical justification
+3. **Explanation** — Stakeholder-friendly narrative
 
-# Monitor cache performance
-curl http://localhost:8000/cache/stats
-```
+These artifacts support regulatory compliance and human oversight requirements.
 
-### Log Files
-
-- **Application logs**: `logs/app.log`
-- **Audit logs**: `outputs/audit.log`
-- **Error logs**: `logs/error.log`
-
-### Cache Management
-
-```bash
-# Clean up expired cache entries
-curl -X POST http://localhost:8000/cache/cleanup \
-  -H "Authorization: Bearer your-api-key"
-
-# Get cache statistics
-curl http://localhost:8000/cache/stats \
-  -H "Authorization: Bearer your-api-key"
-```
-
----
-
-## Advanced Configuration
-
-### Custom Labels
-
-Edit `configs/labels.yaml` to define your classification labels:
-
-```yaml
-labels:
-  - name: "Access Request"
-    description: "Requests to access personal data"
-    examples:
-      - "I want to see my data"
-      - "Show me what you have about me"
-  
-  - name: "Erasure"
-    description: "Requests to delete personal data"
-    examples:
-      - "Delete my data"
-      - "Remove my information"
-```
-
-### Custom Prompts
-
-Modify prompt templates in `prompts/`:
-- `evaluator_prompt.txt`: Evaluation logic
-- `proposer_prompt.txt`: Alternative suggestions
-- `reasoner_prompt.txt`: Explanations
-
-### Performance Tuning
-
-```python
-# Adjust cache settings
-config.performance.cache_max_size_mb = 500
-config.performance.cache_max_entries = 20000
-
-# Adjust concurrency
-config.performance.max_concurrent_requests = 20
-config.performance.batch_size = 25
-
-# Adjust LLM settings
-config.llm.temperature = 0.05  # More deterministic
-config.llm.max_tokens = 1024   # Longer responses
-
-# Future: RAG settings (when available)
-# config.rag.enable_retrieval = True
-# config.rag.top_k_retrieval = 5
-# config.rag.similarity_threshold = 0.7
-```
+### Iterative Enhancement
+The codebase is structured for staged improvement:
+- Clear separation of concerns enables component replacement
+- Configuration-driven behavior enables experimentation
+- Modular agents enable A/B testing of approaches
 
 ---
 
 ## Contributing
 
-### Development Setup
-
 ```bash
-# Clone repository
+# Development setup
 git clone https://github.com/your-org/agentic-reviewer.git
 cd agentic-reviewer
-
-# Create development environment
 python -m venv .venv
 source .venv/bin/activate
-
-# Install development dependencies
 pip install -r requirements.txt
-pip install -e .
 
-# Run tests
+# Run tests before committing
 python -m pytest tests/ -v
 ```
 
 ### Code Standards
-
 - Follow PEP 8
 - Use type hints
-- Write docstrings
+- Write docstrings for public methods
 - Add tests for new features
-
-### Pull Request Process
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Run the test suite
-6. Submit a pull request
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
 ## Acknowledgments
 
-- Built with [FastAPI](https://fastapi.tiangolo.com/)
-- LLM integration via [Ollama](https://ollama.ai/)
-- Inspired by research on semantic auditing and LLM agents
-- RAG Edition inspired by retrieval-augmented generation research
+- **LLM Runtime:** [Ollama](https://ollama.ai/)
+- **API Framework:** [FastAPI](https://fastapi.tiangolo.com/)
+- **Inspired by:** Research on semantic auditing, LLM agents, and responsible AI practices
 
 ---
 
-## Support
+## Documentation Index
 
-- **Issues**: [GitHub Issues](https://github.com/your-org/agentic-reviewer/issues)
-- **Documentation**: [Wiki](https://github.com/your-org/agentic-reviewer/wiki)
-- **Email**: support@your-org.com
-- **RAG Edition**: See [Strategic Analysis](RAG_EDITION_STRATEGIC_ANALYSIS.md) for detailed implementation plan
+| Document | Purpose |
+|----------|---------|
+| `README.md` | This file — project overview and quick start |
+| `TECHNICAL_REVIEW_POC_ROADMAP.md` | Detailed technical review and PoC staging |
+| `RAG_IMPLEMENTATION_PLAN.md` | 18-24 week RAG implementation specification |
+| `RAG_ARCHITECTURE_EVOLUTION.md` | Technical architecture for RAG integration |
+| `RAG_IMPLEMENTATION_CHECKLIST.md` | Task checklist for RAG development |
 
- 
+---
+
+*This project demonstrates AI engineering practices including LLM integration, production resilience patterns, security awareness, and iterative development methodology. The documentation reflects the actual state of implementation—what works today and what's planned for tomorrow.*
