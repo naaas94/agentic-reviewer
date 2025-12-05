@@ -35,7 +35,7 @@ def demo_data_pipeline():
     print("1. Loading sample data...")
     loader = DataLoader()
     df = loader.load_data()
-    print(f"   ✓ Loaded {len(df)} samples from {loader.data_file}")
+    print(f"   ✓ Loaded {len(df)} samples from {loader.data_path}")
     print(f"   ✓ Columns: {list(df.columns)}")
     
     # Show sample data

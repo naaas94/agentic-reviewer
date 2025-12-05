@@ -1,0 +1,22 @@
+labels:
+  - name: "Access Request"
+    definition: "User asks to view data held about them under GDPR/CCPA rights."
+
+  - name: "Erasure"
+    definition: "User demands deletion of their data (right to be forgotten)."
+
+  - name: "Rectification"
+    definition: "User requests correction or update of their personal data."
+
+  - name: "Portability"
+    definition: "User requests data in portable format for transfer."
+
+  - name: "Objection"
+    definition: "User objects to processing for specific purposes."
+
+  - name: "Complaint"
+    definition: "User files formal complaint about data practices."
+
+  - name: "General Inquiry"
+    definition: "User asks general questions about privacy policies."
+

@@ -24,10 +24,81 @@ This project follows an incremental development philosophy. The table below prov
 | RAG: Vector Store | 🔲 **Planned** | FAISS/ChromaDB integration (next phase) |
 | RAG: Embeddings Service | 🔲 **Planned** | sentence-transformers integration |
 | RAG: Document Retrieval | 🔲 **Planned** | Policy document context injection |
+| Portfolio Demo CLI | ✅ **Implemented** | Single-command demo with artifact generation |
+| Synthetic Data Generator | ✅ **Implemented** | Realistic GDPR/CCPA request generation |
+| LLM Report Generation | ✅ **Implemented** | Automated Markdown analysis reports |
 | Evaluation Framework | 🔲 **Planned** | Quantitative accuracy metrics |
-| CLI Interface | 🔲 **Planned** | Interactive terminal experience |
 
 **Why this approach?** Building AI systems requires iterative validation. The core semantic auditing pipeline is functional and demonstrable today. RAG enhancement represents the next evolution—documented extensively in the implementation plan, with infrastructure designed to support it.
+
+---
+
+## 🚀 Portfolio Demo (Quick Validation)
+
+**One command to validate the entire system:**
+
+```bash
+python run_portfolio_demo.py
+```
+
+This generates traceable artifacts demonstrating the complete pipeline:
+
+```
+outputs/runs/2024_12_04_153000/
+├── 00_config.json              # Run configuration (reproducibility)
+├── 01_synthetic_data.csv       # Generated GDPR/CCPA requests
+├── 02_review_results.json      # Full LLM responses with metadata
+├── 03_labeled_dataset.csv      # Corrected labels with reasoning
+├── 04_report.md                # LLM-generated analysis report
+└── 05_metrics.json             # Performance and accuracy stats
+```
+
+### Demo Options
+
+```bash
+# Full demo with LLM (requires Ollama)
+python run_portfolio_demo.py --samples 20
+
+# Dry run without Ollama (generates mock results)
+python run_portfolio_demo.py --no-llm
+
+# Reproducible run
+python run_portfolio_demo.py --seed 42 --samples 15
+
+# Windows PowerShell (without venv activation)
+.\.venv\Scripts\python.exe run_portfolio_demo.py --no-llm
+```
+
+### Terminal Output
+
+```
+╔════════════════════════════════════════════════════════════════╗
+║               AGENTIC REVIEWER — PORTFOLIO DEMO                ║
+╠════════════════════════════════════════════════════════════════╣
+║ Run ID: 2024_12_04_153000                                      ║
+║ Model: mistral | Samples: 15 | Seed: 42                        ║
+╠════════════════════════════════════════════════════════════════╣
+║ PHASE 1: Synthetic Data Generation      ✓ 15 samples           ║
+║ PHASE 2: LLM Review Loop                ✓ 15 reviews           ║
+║ PHASE 3: Report Generation              ✓ 650 words            ║
+║ PHASE 4: Artifact Generation            ✓ 5 files saved        ║
+╠════════════════════════════════════════════════════════════════╣
+║ RESULTS                                                        ║
+║ ├─ Correct:    10 (66.7%)                                      ║
+║ ├─ Incorrect:   4 (26.7%) → alternatives suggested             ║
+║ └─ Uncertain:   1 (6.6%)                                       ║
+╚════════════════════════════════════════════════════════════════╝
+```
+
+### What This Demonstrates
+
+| Capability | Evidence |
+|------------|----------|
+| **Data Engineering** | Synthetic generation, schema validation, CSV/JSON I/O |
+| **LLM Integration** | Ollama orchestration, prompt engineering, async processing |
+| **MLOps Patterns** | Reproducibility (seeds), artifact management, metrics collection |
+| **Observability** | Structured logging, performance timing, health checks |
+| **Code Quality** | Type hints, error handling, modular architecture |
 
 ---
 
@@ -104,11 +175,26 @@ cd agentic-reviewer
 
 # Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Activate virtual environment
+# Linux/macOS:
+source .venv/bin/activate
+
+# Windows CMD:
+.venv\Scripts\activate.bat
+
+# Windows PowerShell (if execution policy allows):
+.\.venv\Scripts\Activate.ps1
 
 # Install dependencies
 pip install -r requirements.txt
 ```
+
+> **Windows PowerShell Note:** If script execution is restricted, you can run commands directly using the virtual environment's Python executable without activation:
+> ```powershell
+> .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+> .\.venv\Scripts\python.exe demo.py
+> ```
 
 ### LLM Setup
 
@@ -129,14 +215,17 @@ ollama serve
 ```bash
 # Comprehensive system demonstration
 python demo.py
+
+# Windows PowerShell (without venv activation):
+.\.venv\Scripts\python.exe demo.py
 ```
 
 The demo script validates the entire pipeline without requiring external services (beyond Ollama), showing:
-- Data loading and sample selection
-- Agent initialization
-- Configuration status
-- Cache operations
-- (If Ollama running) Live LLM processing
+- Data loading from `data/input.csv` (auto-generated if missing)
+- Sample selection strategies (low-confidence, random, all)
+- Agent initialization and label configuration
+- Configuration status and cache operations
+- (If Ollama running) Live LLM processing with sample reviews
 
 ### Start the API Server
 
@@ -266,7 +355,51 @@ python -m pytest tests/ --cov=. --cov-report=html
 
 # Run specific test file
 python -m pytest tests/test_agents.py -v
+
+# Windows PowerShell (without venv activation):
+.\.venv\Scripts\python.exe -m pytest tests/ -v
 ```
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| `ModuleNotFoundError: No module named 'pandas'` | Dependencies not installed | Run `pip install -r requirements.txt` in activated venv |
+| `ModuleNotFoundError: No module named 'fastapi'` | Incomplete installation | Reinstall: `pip install fastapi uvicorn aiohttp jinja2 requests` |
+| PowerShell: "execution of scripts is disabled" | Restricted execution policy | Use direct Python path: `.\.venv\Scripts\python.exe demo.py` |
+| `.venv\Scripts\Activate.ps1` not found | Incomplete virtual environment | Recreate venv: `Remove-Item -Recurse .venv; python -m venv .venv` |
+| Ollama connection refused | Ollama not running | Start Ollama service: `ollama serve` |
+| Mistral model not found | Model not pulled | Pull model: `ollama pull mistral` |
+
+### Windows PowerShell Setup
+
+For Windows users encountering execution policy restrictions, the recommended workflow bypasses activation entirely:
+
+```powershell
+# Navigate to project directory
+cd C:\path\to\agentic-reviewer
+
+# Create virtual environment (one-time)
+python -m venv .venv
+
+# Install dependencies (one-time)
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+# Run demo
+.\.venv\Scripts\python.exe demo.py
+
+# Run API server
+.\.venv\Scripts\python.exe main.py
+
+# Run tests
+.\.venv\Scripts\python.exe -m pytest tests/ -v
+```
+
+This approach maintains isolation benefits without requiring script execution permissions.
 
 ---
 
@@ -324,8 +457,10 @@ agentic-reviewer/
 │   ├── security.py            # Prompt injection & adversarial detection
 │   ├── monitoring.py          # Health checks and metrics
 │   ├── review_loop.py         # Batch and single-sample orchestration
-│   ├── data_loader.py         # CSV data ingestion
+│   ├── data_loader.py         # CSV data ingestion (configurable via data_path)
 │   ├── sample_selector.py     # Low-confidence, random, all strategies
+│   ├── synthetic_generator.py # Portfolio demo data generation
+│   ├── report_generator.py    # LLM-powered Markdown reports
 │   └── logger.py              # SQLite audit logging
 ├── configs/
 │   └── labels.yaml            # Classification label definitions
@@ -338,7 +473,8 @@ agentic-reviewer/
 ├── tests/
 │   ├── test_agents.py         # Agent unit tests
 │   └── test_security.py       # Security validation tests
-├── demo.py                    # Self-contained demonstration script
+├── run_portfolio_demo.py      # Portfolio demo CLI (single entry point)
+├── demo.py                    # Component demonstration script
 ├── main.py                    # FastAPI server
 └── requirements.txt           # Python dependencies
 ```
@@ -375,7 +511,7 @@ The codebase is structured for staged improvement:
 ## Contributing
 
 ```bash
-# Development setup
+# Development setup (Linux/macOS)
 git clone https://github.com/your-org/agentic-reviewer.git
 cd agentic-reviewer
 python -m venv .venv
@@ -384,6 +520,17 @@ pip install -r requirements.txt
 
 # Run tests before committing
 python -m pytest tests/ -v
+```
+
+```powershell
+# Development setup (Windows PowerShell)
+git clone https://github.com/your-org/agentic-reviewer.git
+cd agentic-reviewer
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+# Run tests before committing
+.\.venv\Scripts\python.exe -m pytest tests/ -v
 ```
 
 ### Code Standards
